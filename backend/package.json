@@ -12,7 +12,9 @@
   },
   "scripts": {
     "dev": "ts-node index.ts",
+    "build": "tsc",
     "migrate": "prisma migrate deploy",
-    "generate": "prisma generate"
+    "generate": "prisma generate",
+    "start": "node dist/index.js"
   }
 }
