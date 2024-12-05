@@ -1,18 +1,23 @@
-# Builder
-FROM --platform=linux/amd64 node:16 as build
+# Use the official Node.js 20 image as the base image
+FROM node:20
 
+# Set the working directory in the container
 WORKDIR /app
+
+# Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
+
+# Install the dependencies
 RUN npm install
+
+# Copy the rest of the application's source code to the container
 COPY . .
 
-# Building
+# Build the React.js application
 RUN npm run build
 
-FROM nginx:1.21.1
-COPY --from=build /app/build /usr/share/nginx/html
+# Expose the port that the application listens on
+EXPOSE 3001
 
-EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start a simple web server to serve the built React.js files
+CMD [ "npx", "serve", "-s", "build" ]

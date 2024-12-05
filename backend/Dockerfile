@@ -1,27 +1,20 @@
-# Builder stage
-FROM node:18 AS build
+# Use the official Node.js 20 image as the base image
+FROM node:20
 
+# Set the working directory in the container
 WORKDIR /app
 
+# Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
 
-# Install dependencies
+# Install the dependencies
 RUN npm install
 
-# Copy app code
+# Copy the rest of the application's source code to the container
 COPY . .
 
-RUN npm run build
+# Expose the port that the application listens on
+EXPOSE 3000
 
-# Deploy image
-FROM node:18-slim
-
-WORKDIR /app
-
-COPY --from=build /app/package*.json ./
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
-
-EXPOSE 8080
-
-CMD ["npm", "run", "start"]
+# Start the Node.js application
+CMD [ "npm", "start" ]
